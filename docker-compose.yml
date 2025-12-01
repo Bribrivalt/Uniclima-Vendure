@@ -1,0 +1,71 @@
+version: '3.8'
+
+networks:
+  vendure-network:
+    driver: bridge
+
+services:
+  db:
+    image: postgres:13
+    restart: unless-stopped
+    networks:
+      - vendure-network
+    environment:
+      POSTGRES_DB: ${DB_NAME:-vendure}
+      POSTGRES_USER: ${DB_USERNAME:-vendure}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-vendure}
+    ports:
+      - "6543:5432"
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U vendure" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../Dockerfile.dev
+    restart: unless-stopped
+    networks:
+      - vendure-network
+    command: sh -c "npx vite build && npm run dev"
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      PORT: ${PORT:-3001}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-vendure}
+      DB_USERNAME: ${DB_USERNAME:-vendure}
+      DB_PASSWORD: ${DB_PASSWORD:-vendure}
+      COOKIE_SECRET: ${COOKIE_SECRET:-yclAsZIhRw2CWAVDT4GbwQ}
+      SUPERADMIN_USERNAME: ${SUPERADMIN_USERNAME:-superadmin}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD:-superadmin}
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    networks:
+      - vendure-network
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:3001/shop-api
+    depends_on:
+      - backend
