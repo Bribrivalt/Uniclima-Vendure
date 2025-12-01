@@ -9,7 +9,13 @@
     "build": "tsc",
     "start:server": "node ./dist/index.js",
     "start:worker": "node ./dist/index-worker.js",
-    "start": "concurrently npm:start:*"
+    "start": "concurrently npm:start:*",
+    "migrations:generate": "npx vendure migrate",
+    "migrations:run": "ts-node -r dotenv/config ./src/run-migrations.ts",
+    "migrations:revert": "ts-node -r dotenv/config ./src/revert-migration.ts",
+    "db:check": "ts-node -r dotenv/config ./src/check-db-connection.ts",
+    "seed": "ts-node -r dotenv/config ./src/seed.ts",
+    "import:woocommerce": "ts-node -r dotenv/config ./src/import-woocommerce.ts"
   },
   "dependencies": {
     "@vendure/asset-server-plugin": "3.5.1",
@@ -17,10 +23,12 @@
     "@vendure/dashboard": "3.5.1",
     "@vendure/email-plugin": "3.5.1",
     "@vendure/graphiql-plugin": "3.5.1",
+    "csv-parse": "^5.5.6",
     "dotenv": "17.2.3",
     "pg": "^8.16.3"
   },
   "devDependencies": {
+    "@types/pg": "^8.11.6",
     "@vendure/cli": "3.5.1",
     "concurrently": "9.2.1",
     "ts-node": "^10.9.2",

@@ -3,3 +3,15 @@ dist
 admin-ui
 static/assets
 static/email/test-emails
+
+# Environment variables (contains secrets)
+.env
+.env.local
+.env.*.local
+
+# SQLite database (deprecated - using PostgreSQL)
+*.sqlite
+
+# Logs
+*.log
+vendure-import-error.log

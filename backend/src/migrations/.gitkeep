@@ -1,0 +1,3 @@
+# This directory contains database migrations
+# Migrations are generated using: npm run migrations:generate
+# Migrations are run automatically on server start via runMigrations()
