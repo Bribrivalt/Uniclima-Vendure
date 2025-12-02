@@ -1,14 +1,13 @@
-import { Metadata } from 'next';
-import { apolloClient } from '@/lib/vendure/client';
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '@/lib/vendure/queries/products';
 import { ProductCard } from '@/components/product/ProductCard';
+import { ProductSearch } from '@/components/product/ProductSearch';
+import { ProductSort, SortOption } from '@/components/product/ProductSort';
 import { Product } from '@/lib/types/product';
 import styles from './page.module.css';
-
-export const metadata: Metadata = {
-    title: 'Repuestos - Uniclima',
-    description: 'Repuestos reacondicionados de climatización y aire acondicionado',
-};
 
 interface ProductsData {
     products: {
@@ -17,30 +16,47 @@ interface ProductsData {
     };
 }
 
-async function getProducts() {
-    try {
-        const { data } = await apolloClient.query<ProductsData>({
-            query: GET_PRODUCTS,
-            variables: {
-                options: {
-                    take: 12,
-                    skip: 0,
-                    sort: {
-                        name: 'ASC',
-                    },
-                },
+export default function RepuestosPage() {
+    const [searchQuery, setSearchQuery] = useState('');
+    const [sortOption, setSortOption] = useState<SortOption>('name-asc');
+
+    // Convertir sortOption a formato Vendure
+    const getSortVariables = useCallback(() => {
+        switch (sortOption) {
+            case 'name-asc':
+                return { name: 'ASC' as const };
+            case 'name-desc':
+                return { name: 'DESC' as const };
+            case 'price-asc':
+                return { price: 'ASC' as const };
+            case 'price-desc':
+                return { price: 'DESC' as const };
+            default:
+                return { name: 'ASC' as const };
+        }
+    }, [sortOption]);
+
+    // Query de productos con Apollo Client
+    const { data, loading, error } = useQuery<ProductsData>(GET_PRODUCTS, {
+        variables: {
+            options: {
+                take: 50,
+                skip: 0,
+                filter: searchQuery
+                    ? {
+                        name: {
+                            contains: searchQuery,
+                        },
+                    }
+                    : undefined,
+                sort: getSortVariables(),
             },
-        });
+        },
+        fetchPolicy: 'cache-and-network',
+    });
 
-        return data.products;
-    } catch (error) {
-        console.error('Error fetching products:', error);
-        return { items: [], totalItems: 0 };
-    }
-}
-
-export default async function RepuestosPage() {
-    const products = await getProducts();
+    const products = data?.products.items || [];
+    const totalItems = data?.products.totalItems || 0;
 
     return (
         <div className={styles.container}>
@@ -52,21 +68,63 @@ export default async function RepuestosPage() {
                 </p>
             </div>
 
+            {/* Search and Sort */}
+            <div className={styles.controls}>
+                <div className={styles.searchWrapper}>
+                    <ProductSearch onSearch={setSearchQuery} />
+                </div>
+                <ProductSort value={sortOption} onChange={setSortOption} />
+            </div>
+
             {/* Stats */}
             <div className={styles.stats}>
                 <span className={styles.count}>
-                    {products.totalItems} {products.totalItems === 1 ? 'producto' : 'productos'}
+                    {loading ? (
+                        'Cargando...'
+                    ) : (
+                        <>
+                            {totalItems} {totalItems === 1 ? 'producto' : 'productos'}
+                            {searchQuery && ` encontrado${totalItems === 1 ? '' : 's'} para "${searchQuery}"`}
+                        </>
+                    )}
                 </span>
             </div>
 
+            {/* Loading State */}
+            {loading && products.length === 0 && (
+                <div className={styles.loading}>
+                    <div className={styles.spinner} />
+                    <p>Cargando productos...</p>
+                </div>
+            )}
+
+            {/* Error State */}
+            {error && (
+                <div className={styles.error}>
+                    <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        />
+                    </svg>
+                    <h2>Error al cargar productos</h2>
+                    <p>Por favor, verifica que el backend esté corriendo.</p>
+                </div>
+            )}
+
             {/* Products Grid */}
-            {products.items.length > 0 ? (
+            {!loading && !error && products.length > 0 && (
                 <div className={styles.grid}>
-                    {products.items.map((product) => (
+                    {products.map((product) => (
                         <ProductCard key={product.id} product={product} />
                     ))}
                 </div>
-            ) : (
+            )}
+
+            {/* Empty State */}
+            {!loading && !error && products.length === 0 && (
                 <div className={styles.empty}>
                     <svg
                         width="64"
@@ -83,9 +141,13 @@ export default async function RepuestosPage() {
                             d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                         />
                     </svg>
-                    <h2 className={styles.emptyTitle}>No hay productos disponibles</h2>
+                    <h2 className={styles.emptyTitle}>
+                        {searchQuery ? 'No se encontraron productos' : 'No hay productos disponibles'}
+                    </h2>
                     <p className={styles.emptyText}>
-                        Estamos trabajando en añadir más productos. Vuelve pronto.
+                        {searchQuery
+                            ? `No hay resultados para "${searchQuery}". Intenta con otra búsqueda.`
+                            : 'Estamos trabajando en añadir más productos. Vuelve pronto.'}
                     </p>
                 </div>
             )}

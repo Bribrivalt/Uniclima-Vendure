@@ -1,0 +1,91 @@
+/* ========================================
+   SEARCH WRAPPER
+   ======================================== */
+
+.searchWrapper {
+    width: 100%;
+}
+
+.searchContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* ========================================
+   SEARCH INPUT
+   ======================================== */
+
+.searchInput {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    padding-left: var(--spacing-12);
+    padding-right: var(--spacing-10);
+    border: 2px solid #e0e0e0;
+    border-radius: var(--border-radius-lg);
+    font-size: var(--font-size-base);
+    transition: all var(--transition-base);
+    background: white;
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: #cc0000;
+    box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.1);
+}
+
+.searchInput::placeholder {
+    color: #999;
+}
+
+/* ========================================
+   ICONS
+   ======================================== */
+
+.searchIcon {
+    position: absolute;
+    left: var(--spacing-4);
+    color: #666;
+    pointer-events: none;
+}
+
+.clearButton {
+    position: absolute;
+    right: var(--spacing-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #999;
+    border-radius: var(--border-radius-full);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.clearButton:hover {
+    background: #f5f5f5;
+    color: #cc0000;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 640px) {
+    .searchInput {
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-2) var(--spacing-3);
+        padding-left: var(--spacing-10);
+        padding-right: var(--spacing-9);
+    }
+
+    .searchIcon {
+        left: var(--spacing-3);
+        width: 18px;
+        height: 18px;
+    }
+}
