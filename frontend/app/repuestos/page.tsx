@@ -1,4 +1,3 @@
-```typescript
 import { Metadata } from 'next';
 import { apolloClient } from '@/lib/vendure/client';
 import { GET_PRODUCTS } from '@/lib/vendure/queries/products';
