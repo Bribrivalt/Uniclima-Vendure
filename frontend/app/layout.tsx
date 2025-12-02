@@ -1,12 +1,16 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import './globals.css'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import { Providers } from '@/lib/providers'
+import Header from '@/components/layout/Header'
+import { TopBar } from '@/components/layout/TopBar'
+import Footer from '@/components/layout/Footer'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-    title: 'Uniclima - Climatización Profesional',
-    description: 'Especialistas en aire acondicionado, calderas y climatización',
+    title: 'Uniclima - Climatización y Repuestos',
+    description: 'Especialistas en climatización, aires acondicionados y repuestos',
 }
 
 export default function RootLayout({
@@ -16,8 +20,9 @@ export default function RootLayout({
 }) {
     return (
         <html lang="es">
-            <body>
+            <body className={inter.className}>
                 <Providers>
+                    <TopBar />
                     <Header />
                     <main>{children}</main>
                     <Footer />
