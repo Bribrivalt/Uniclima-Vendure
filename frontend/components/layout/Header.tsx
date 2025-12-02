@@ -1,10 +1,40 @@
-import Link from 'next/link'
-import styles from './Header.module.css'
+'use client';
+
+import Link from 'next/link';
+import { useState, useRef, useEffect } from 'react';
+import { useAuth } from '@/lib/auth-context';
+import styles from './Header.module.css';
 
 export default function Header() {
+    const { currentUser, isAuthenticated, logout } = useAuth();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Cerrar dropdown al hacer click fuera
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        if (isDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isDropdownOpen]);
+
+    const handleLogout = async () => {
+        await logout();
+        setIsDropdownOpen(false);
+    };
+
     return (
         <header className={styles.header}>
-            <div className="container">
+            <div className={styles.container}>
                 <nav className={styles.nav}>
                     <Link href="/" className={styles.logo}>
                         <span>🌡️</span>
@@ -19,15 +49,83 @@ export default function Header() {
                     </div>
 
                     <div className={styles.actions}>
-                        <Link href="/login" className="btn btn-secondary">
-                            Iniciar Sesión
+                        {/* Icono de búsqueda */}
+                        <button className={styles.iconButton} aria-label="Buscar">
+                            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+
+                        {/* Icono de carrito */}
+                        <Link href="/carrito" className={styles.iconButton} aria-label="Carrito">
+                            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
                         </Link>
-                        <Link href="/registro" className="btn btn-primary">
-                            Registro
-                        </Link>
+
+                        {/* Autenticación */}
+                        {isAuthenticated && currentUser ? (
+                            <div className={styles.userMenu} ref={dropdownRef}>
+                                <button
+                                    className={styles.userButton}
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    aria-expanded={isDropdownOpen}
+                                    aria-haspopup="true"
+                                >
+                                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    <span className={styles.userName}>
+                                        {currentUser.firstName}
+                                    </span>
+                                    <svg
+                                        width="16"
+                                        height="16"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        className={isDropdownOpen ? styles.chevronUp : styles.chevronDown}
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+
+                                {isDropdownOpen && (
+                                    <div className={styles.dropdown}>
+                                        <Link href="/cuenta" className={styles.dropdownItem}>
+                                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                            Mi Cuenta
+                                        </Link>
+                                        <Link href="/pedidos" className={styles.dropdownItem}>
+                                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                            </svg>
+                                            Mis Pedidos
+                                        </Link>
+                                        <button onClick={handleLogout} className={styles.dropdownItem}>
+                                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                            </svg>
+                                            Cerrar Sesión
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <>
+                                <Link href="/login" className={styles.loginButton}>
+                                    Iniciar Sesión
+                                </Link>
+                                <Link href="/registro" className={styles.registerButton}>
+                                    Registro
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </nav>
             </div>
         </header>
-    )
+    );
 }

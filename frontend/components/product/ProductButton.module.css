@@ -1,0 +1,42 @@
+/* ========================================
+   PRODUCT BUTTON STYLES
+   ======================================== */
+
+.cartButton,
+.quoteButton,
+.successButton {
+    position: relative;
+    overflow: hidden;
+}
+
+.buttonIcon {
+    flex-shrink: 0;
+}
+
+/* Success state animation */
+.successButton {
+    animation: successPulse 0.3s ease-out;
+}
+
+@keyframes successPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Hover effects específicos */
+.cartButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.quoteButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+}

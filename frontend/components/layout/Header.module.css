@@ -1,70 +1,276 @@
 .header {
-    background: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: #1a1a1a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     position: sticky;
     top: 0;
     z-index: 100;
+}
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-4);
 }
 
 .nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0;
-    gap: 2rem;
+    padding: var(--spacing-4) 0;
+    gap: var(--spacing-8);
 }
+
+/* ========================================
+   LOGO
+   ======================================== */
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
+    gap: var(--spacing-2);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: white;
+    text-decoration: none;
+    transition: color var(--transition-base);
+}
+
+.logo:hover {
+    color: #cc0000;
 }
 
 .logo span:first-child {
-    font-size: 2rem;
+    font-size: var(--font-size-2xl);
 }
+
+/* ========================================
+   MENU
+   ======================================== */
 
 .menu {
     display: flex;
-    gap: 2rem;
-    font-weight: 500;
+    gap: var(--spacing-6);
+    font-weight: var(--font-weight-medium);
 }
 
 .menu a {
-    transition: color 0.2s;
+    color: #e0e0e0;
+    text-decoration: none;
+    transition: color var(--transition-base);
+    font-size: var(--font-size-base);
 }
 
 .menu a:hover {
-    color: var(--primary-color);
+    color: #cc0000;
 }
+
+/* ========================================
+   ACTIONS
+   ======================================== */
 
 .actions {
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: var(--spacing-4);
 }
+
+/* Icon Buttons */
+.iconButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-full);
+    background: transparent;
+    color: #e0e0e0;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-decoration: none;
+}
+
+.iconButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Login/Register Buttons */
+.loginButton,
+.registerButton {
+    padding: var(--spacing-2) var(--spacing-5);
+    border-radius: var(--border-radius-md);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    border: 2px solid transparent;
+}
+
+.loginButton {
+    color: white;
+    border-color: #666;
+}
+
+.loginButton:hover {
+    border-color: #cc0000;
+    color: #cc0000;
+}
+
+.registerButton {
+    background: #cc0000;
+    color: white;
+}
+
+.registerButton:hover {
+    background: #e30000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(204, 0, 0, 0.4);
+}
+
+/* ========================================
+   USER MENU
+   ======================================== */
+
+.userMenu {
+    position: relative;
+}
+
+.userButton {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-4);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-md);
+    color: white;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.userButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.userName {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.chevronDown,
+.chevronUp {
+    transition: transform var(--transition-base);
+}
+
+.chevronUp {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.dropdown {
+    position: absolute;
+    top: calc(100% + var(--spacing-2));
+    right: 0;
+    min-width: 200px;
+    background: white;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    animation: dropdownFadeIn 0.2s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdownItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3) var(--spacing-4);
+    color: #333;
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    background: white;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--transition-base);
+}
+
+.dropdownItem:hover {
+    background: #f5f5f5;
+}
+
+.dropdownItem svg {
+    color: #666;
+}
+
+.dropdownItem:hover svg {
+    color: #cc0000;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
 
 @media (max-width: 768px) {
     .nav {
         flex-wrap: wrap;
+        gap: var(--spacing-4);
     }
 
     .menu {
         order: 3;
         width: 100%;
         justify-content: space-around;
-        padding-top: 1rem;
-        border-top: 1px solid var(--border-color);
+        padding-top: var(--spacing-4);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        gap: var(--spacing-4);
+    }
+
+    .menu a {
+        font-size: var(--font-size-sm);
     }
 
     .actions {
-        gap: 0.5rem;
+        gap: var(--spacing-2);
     }
 
-    .actions .btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
+    .userName {
+        display: none;
+    }
+
+    .loginButton,
+    .registerButton {
+        padding: var(--spacing-2) var(--spacing-3);
+        font-size: var(--font-size-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .logo span:last-child {
+        display: none;
+    }
+
+    .menu {
+        gap: var(--spacing-2);
+    }
+
+    .iconButton {
+        width: 36px;
+        height: 36px;
     }
 }
