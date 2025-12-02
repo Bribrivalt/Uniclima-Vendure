@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import { Providers } from '@/lib/providers'
 
 export const metadata: Metadata = {
     title: 'Uniclima - Climatización Profesional',
@@ -11,14 +12,16 @@ export const metadata: Metadata = {
 export default function RootLayout({
     children,
 }: {
-    children: React.Node
+    children: React.ReactNode
 }) {
     return (
         <html lang="es">
             <body>
-                <Header />
-                <main>{children}</main>
-                <Footer />
+                <Providers>
+                    <Header />
+                    <main>{children}</main>
+                    <Footer />
+                </Providers>
             </body>
         </html>
     )

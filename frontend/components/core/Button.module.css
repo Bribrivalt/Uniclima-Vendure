@@ -1,0 +1,131 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    font-family: var(--font-family-base);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--border-radius-md);
+    transition: all var(--transition-base);
+    cursor: pointer;
+    border: var(--border-width-base) solid transparent;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ========================================
+   VARIANTES
+   ======================================== */
+
+/* Primary - Rojo sólido */
+.primary {
+    background-color: var(--color-primary);
+    color: var(--color-text-primary);
+    border-color: var(--color-primary);
+}
+
+.primary:hover:not(:disabled) {
+    background-color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-primary);
+}
+
+.primary:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Secondary - Borde rojo, fondo transparente */
+.secondary {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.secondary:hover:not(:disabled) {
+    background-color: var(--color-primary);
+    color: var(--color-text-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-primary);
+}
+
+.secondary:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Outline - Borde gris, fondo transparente */
+.outline {
+    background-color: transparent;
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+}
+
+.outline:hover:not(:disabled) {
+    background-color: var(--color-surface);
+    border-color: var(--color-text-secondary);
+}
+
+/* ========================================
+   TAMAÑOS
+   ======================================== */
+
+.sm {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-sm);
+}
+
+.md {
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: var(--font-size-base);
+}
+
+.lg {
+    padding: var(--spacing-4) var(--spacing-8);
+    font-size: var(--font-size-lg);
+}
+
+/* ========================================
+   MODIFICADORES
+   ======================================== */
+
+.fullWidth {
+    width: 100%;
+}
+
+.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.loadingText {
+    opacity: 0.7;
+}
+
+/* Spinner de carga */
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

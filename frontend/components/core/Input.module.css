@@ -1,0 +1,133 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+/* ========================================
+   LABEL
+   ======================================== */
+
+.label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    display: block;
+}
+
+.required {
+    color: var(--color-error);
+    margin-left: var(--spacing-1);
+}
+
+/* ========================================
+   INPUT WRAPPER
+   ======================================== */
+
+.inputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    position: absolute;
+    left: var(--spacing-4);
+    display: flex;
+    align-items: center;
+    color: var(--color-text-tertiary);
+    pointer-events: none;
+}
+
+/* ========================================
+   INPUT
+   ======================================== */
+
+.input {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--font-size-base);
+    font-family: var(--font-family-base);
+    color: var(--color-text-primary);
+    background-color: var(--color-surface);
+    border: var(--border-width-thin) solid var(--color-border-light);
+    border-radius: var(--border-radius-md);
+    transition: all var(--transition-base);
+    outline: none;
+}
+
+.input.withIcon {
+    padding-left: calc(var(--spacing-4) * 2 + 20px);
+}
+
+.input::placeholder {
+    color: var(--color-text-tertiary);
+}
+
+/* Estados */
+.input:hover:not(:disabled) {
+    border-color: var(--color-border);
+}
+
+.input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-alpha-10);
+}
+
+.input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--color-background-elevated);
+}
+
+/* Error state */
+.input.error {
+    border-color: var(--color-error);
+}
+
+.input.error:focus {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* ========================================
+   MENSAJES DE AYUDA Y ERROR
+   ======================================== */
+
+.helperText,
+.errorText {
+    font-size: var(--font-size-sm);
+    margin: 0;
+}
+
+.helperText {
+    color: var(--color-text-tertiary);
+}
+
+.errorText {
+    color: var(--color-error);
+}
+
+/* ========================================
+   TIPOS ESPECÍFICOS
+   ======================================== */
+
+/* Input de tipo number */
+.input[type='number']::-webkit-inner-spin-button,
+.input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+/* Input de tipo search */
+.input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
