@@ -1,5 +1,6 @@
+```typescript
 import { Metadata } from 'next';
-import { getClient } from '@/lib/vendure/client';
+import { apolloClient } from '@/lib/vendure/client';
 import { GET_PRODUCTS } from '@/lib/vendure/queries/products';
 import { ProductCard } from '@/components/product/ProductCard';
 import { Product } from '@/lib/types/product';
@@ -18,10 +19,8 @@ interface ProductsData {
 }
 
 async function getProducts() {
-    const client = getClient();
-
     try {
-        const { data } = await client.query<ProductsData>({
+        const { data } = await apolloClient.query<ProductsData>({
             query: GET_PRODUCTS,
             variables: {
                 options: {
